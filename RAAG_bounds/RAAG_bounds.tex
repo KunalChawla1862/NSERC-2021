@@ -1,0 +1,115 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath, amssymb, amsthm, bbm, mathtools}
+\newtheorem{defin}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}{Lemma}
+\newtheorem{example}{Example}
+\newtheorem{prob}{Problem}
+\newtheorem{sol}{Solution}
+
+\usepackage{tcolorbox}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{lscape}
+\usepackage{fullpage}
+\usepackage{hyperref}
+
+\newtcolorbox[auto counter]{problem}[2][]{ colback=red!5!white,colframe=black!75!white,fonttitle=\bfseries, title=Problem~\thetcbcounter: #2,#1}
+
+\newcommand{\incfig}[2][1]{%
+    \def\svgwidth{#1\columnwidth}
+    \import{./figures/}{#2.pdf_tex}
+}
+
+\pdfsuppresswarningpagegroup=1
+
+\begin{document}
+\begin{defin}[Piling]
+	Let $ \Gamma(G) $ be a RAAG with canonical generators\footnote{here $ v _{1}, ..., v _{n} $ are the vertices of the graph $ G $} $ v _{1}, ..., v _{n} $. Given a word $ w$ in the generators a piling $ \Pi (w) $ is a tuple of $ n $ strings in $ \{ 0,+,- \} ^{*} $ defined inductively as follows:
+	\begin{itemize} 
+		\item $ \Pi (e) $ is a tuple of empty strings.
+		\item Given $ \Pi(w) $, $ \Pi (wv _{i}) $ is defined as follows: 
+
+			\begin{enumerate} 
+				\item If the $ i $th string is empty, ends in `0', or ends in `$+$', then $ \Pi(wv _{i}) $ is obtained from $ \Pi(w) $ by appending a `$ + $' to the $ i $th string, and appending a $ 0 $ to the $ j $th string for all $ j $ such that $ v _{j} $ and $ v _{i} $ don't commute
+				\item If the $ i $th string ends in a `$ - $', then this character is removed, as well as the final `0' on each $ j $th string where $ v _{j} $ and $ v _{i} $ do not commute. \footnote{Since the $ i $th string ends in a ` $ - $', then the $ j $th string ends in a 0 if $ v _{j} $ and $ v _{i} $ don't commute.}
+				  \end{enumerate} 
+			  \item The piling $ \Pi(wv _{i} ^{-1})  $ is obtained likewise, by swapping the roles of `$ + $' and `$ - $'.
+	 \end{itemize}
+	  \end{defin}
+
+\begin{defin} 
+	Given an element $ g \in \Gamma(G) $, the terminal clique $ term(g) $ is the set of vertices $ v _{i} $ in the graph $ G $ such that the $ i $th string in the piling $ \Pi(g) $ ends in a `$ + $' or `$ - $'. The initial clique $ init(g) $ is the terminal clique of $ g ^{-1} $. 
+	  \end{defin}
+
+	  Given two pilings $ \Pi(g) $ and $ \Pi(h) $, the concatenation $ \Pi(g)\Pi(h) $ is defined componentwise by concatenating the $ i $th strings of each tuple for all $ 1 \leq i \leq n $.
+\begin{lem} 
+	Let $ g,h$ be words in the RAAG $ \Gamma(G) $ such that $ term(g) \cap init(h) = \varnothing $. Then $ \Pi(gh) = \Pi(g)\Pi(h) $. 
+	  \end{lem}
+	  \begin{proof}
+		  We induct on the length of $ h $. First we observe that $ h $ can be represented by some reduced word in the generators, in the sense that it contains no subword of the form $ v _{i} x v _{i} ^{-1} $ where $ v _{i} $ commutes with all letters of $ x $. Indeed, if such a subword appears, we can apply our relations to replace it by $ x $. As each substitution strictly decreases the length of the word, we can eliminate all such occurences by finitely many moves.
+
+		  Now write $ h $ in such a form and suppose that the word begins with $ v _{i} ^{k} $ or $ v _{i} ^{-k} $ where $ k $ is maximal (i.e. the word does not have $ v _{i} ^{k+1} $ or $ v _{i} ^{-(k+1)} $ as a prefix). Without loss of generality, suppose it starts with $ v _{i} ^{k} $ (the $ v _{i} ^{-k} $ case follows from the same argument).
+
+		  Let us consider the piling of $ \Pi(gv _{i} ^{k}) $ -- we claim that $ \Pi(g v _{i} ^{k}) = \Pi(g)\Pi(v _{i} ^{k}) $. Since $ h $ can be represented by a reduced word beginning with $ v _{i} $, then the $ i $th string in the piling $ \Pi(h ^{-1}) $ ends in a `+' or `-', hence $ v _{i} $ is in the initial clique of $ h $. Therefore $ v _{i} $ is not in the terminal clique of $ g $. Then the $ i $th string in $ \Pi(g) $ is either empty or ends in a `$ 0 $'. Hence the piling $ \Pi(gv _{i} ^{k}) $ is obtained from $ \Pi(g) $ by appending $ k $ `$ + $'s and appending $ k $ `$ 0 $''s to all $ j $th strings where $ v _{j} $ does not commute with $ v _{i} $. This is precisely the concatenation $ \Pi(g)\Pi(v _{i} ^{k}) $.
+
+		  Now let $ g' = gv _{i} ^{k} $ and let $ h' = v _{i} ^{-k} h $. As we chose $ k $ to be maximal, then $ v _{i} $ is not in the initial clique of $ h' $. Indeed, as the only other occurence of $ v _{i} ^{\pm} $ in the chosen word for $ h' $ occurs after some $ v _{j} ^{\pm}  $ not commuting with $ v _{i} $, then the corresponding word for $ (h') ^{-1} $ has no occurences of $ v _{i} ^{\mp} $ after $ v _{j} ^{\mp} $. Hence the $ i $th string in $ \Pi((h') ^{-1}) $ ends in a `0'.
+
+		  Also observe that the terminal clique of $ g' $, which consists of all $ v _{i} $ such that $ \Pi(g') $ the $ i $th string ends in a `$ + $' or `$ - $', is contained in $ term(g) \cup \{v _{i}\} $. Hence $ term(g') \cap init(h') = \varnothing$. As $ |h'| $ is strictly less than $ |h| $, we know by our induction hypothesis that $ \Pi(g')\Pi(h') = \Pi(g'h') $.
+
+		  Since $ |h'| < |h| $ and $ v _{i} $ is not in the initial clique of $ h' $, we can apply our induction hypothesis again to get $ \Pi(v _{i} ^{k})\Pi(h') = \Pi(v _{i} ^{k} h') = \Pi(h) $. Putting this together, we get \begin{align*} 
+		  \Pi(gh) &= \Pi(g'h') \\
+			     &= \Pi(g')\Pi(h') \\
+			     &= \Pi(gv _{i} ^{k}) \Pi(h')\\
+			     &= \Pi(g)\Pi(v _{i} ^{k})\Pi(h') \\
+			     &= \Pi(g)\Pi(h).
+	    \end{align*}
+	  \end{proof}
+
+\newpage
+
+\section{Main argument}
+Let $ d > 14 $ and consider a RAAG $ \Gamma(G) $ with connection graph a cycle with $ d $ vertices, labelled $ a _{1}, ..., a _{d} $. That is to say, $ \Gamma(G) $ is presented as \[ \langle a _{1}, ..., a _{d}| [a _{i}, a _{i+1}] = e\rangle  \] where the indices are taken modulo $ d $. Let $ \mu _{S} $ be the uniform measure on $ \{ a _{1} ^{\pm }, ..., a _{d} ^{\pm} \} $. Further suppose that $ \nu $ is a measure with $ \nu (e) = 0 $. Consider a random walk $ \mu _{S} * \nu $. In other words, our random walk is given by $ Z _{n} = s _{1} w _{1} ... s _{n}w _{n} $. 
+
+We want to show that there exists some $ \kappa > 0 $ such that \[ \mathbb{P} (|Z _{n}| \leq \kappa n) \leq e ^{-\kappa n},\] where $ |Z _{n}| $ denotes the word length of $ Z _{n} $ with respect to the symmetric generating set given above.
+
+To prove this, we condition on the $ w _{n} $'s and keep the randomness coming from the $ s _{n}$'s. We find a working $ \kappa $ that is independent of our conditioning, so this will prove the claim.
+
+
+\begin{defin} 
+	Say that a time $ k $ is pivotal with respect to $ n $ if $ |Z _{k}|, |Z _{k} s _{k}|, |Z _{k}s_k w _{k}| $ is strictly increasing, and if the piling for $ Z _{k} $ is a prefix of the piling for $ Z _{j} $ for all $ k \leq j \leq n $.
+	  \end{defin}
+
+	  Denote by $ P _{n} $ the set of pivotal times w.r.t $ n $ and let $ A _{n} = |P _{n}| $. We have $ |Z _{n}| \geq A _{n} $. We want to show that there exists some $ \kappa > 0 $ such that $ \mathbb{P} (A _{n} \leq \kappa n) \leq e ^{-\kappa n} $. To do this, we show that $ A _{n+1} $ stochastically dominates\footnote{in the sense that for any $ i $ we have $ \mathbb{P} (A _{n+1} \geq i) \geq \mathbb{P} (A _{n} + U \geq i)$} $ A _{n} + U _{n} $ where $ U _{n} $'s are i.i.d with positive expectation and exponential tail.
+
+	  To discuss how the choices of $ s _{i} $ affect the number of pivotal times, we use the notion of a `piling' for an element of a RAAG (taken from ``\href{https://arxiv.org/pdf/0802.1771.pdf}{`The conjugacy problem in Right-Angled Artin groups and their subgroups}" by Crisp, Godelle, and West). We don't discuss them here, but we note that the authors prove that to each word in the RAAG there is a well-defined clique in the connection graph such that $ |Z _{n-1}s _{n}| \leq |Z _{n-1}|$ only if $ s _{n} $ corresponds to a vertex in the clique. Likewise, for each word $ w _{n} $, by considering $ s _{n} ^{-1} $ and $ w _{n} ^{-1} $. we have that a unique well-defined clique such that $ |w _{n}| \leq  |s _{n} w _{n}| $ only if $ s _{n} $ corresponds to a vertex in this clique. We call these cliques the \emph{terminal clique} of $ Z _{n} $ and the \emph{initial clique} of $ w _{n} $, respectively.
+
+
+
+%	  For a word $ w _{n} $ in the RAAG, write $ w _{n} = a ^{j _{1}} _{i _{1}} ... a ^{j _{k}}_{i _{k}} $ where no two adjacent $ a _{i _{k}} $'s come from the same generator, and $ a _{i _{k}} $ and $ a _{i _{m}} $ are different if each of $ a _{i _{k}}, a _{i _{k+1}}, ..., a _{i _{m}} $ commute with $ a _{i _{k}} $. Starting from $ a _{i _{1}} $, consider the longest subword for which all $ a _{i _{1}}, ..., a _{i _{k}} $ commute. The corresponding subgraph of the connection graph is the \emph{initial clique} of $ w _{n} $. We define the \emph{terminal clique} likewise, but starting from the last letter in the word instead.
+
+	  First consider the probability of adding another pivotal time. There are at most three ways for this to avoid adding another pivotal time:
+
+	  \begin{enumerate} 
+		  \item If $ s _{n} $ corresponds to a vertex in the initial clique of $ w _{n} $. For example, $ s _{n} = a ^{-1} _{1} $ and $ w _{n} = a _{1}  $.
+		  \item If $ s _{n} $ corresponds to a vertex in the terminal clique of $ Z_{n-1}$. For example, if $ Z _{n-1} = a _{1} a _{2} $ and $ s _{n} = a _{1} ^{-1} $.
+		  \item If $ s _{n} $ corresponds to a vertex which is adjacent to both the initial clique of $ Z _{n-1} $ and the terminal clique of $ w _{n} $. For example, if $ Z _{n-1} = a _{2} ^{2} $, $ s _{n} = a _{1} $, and $ w _{n} = a _{2} ^{-2} $.
+		    \end{enumerate} As our graph is a cycle of length greater than $ 6 $, then each clique has size at most 2, and for any two cliques $ K _{1}, K _{2} $ there is at most one vertex in $ C _{d} \setminus (K _{1}, K _{2})  $ adjacent to both. Therefore there are at most $ 5 $ possible vertices in the connection graph for which we don't add another pivotal time.
+
+	  As our measure is uniform on our symmetric generating set, this means that $ \mathbb{P} (A _{n+1} = A _{n} +1) \geq \frac{2d-2\cdot 5}{2d} = \frac{d-5}{d} $.
+
+	  Now consider the probability of backtracking (i.e. the probability that $ A _{n+1} = A _{n} - q $ for some $ q>0 $). 
+
+	  First consider the probability that $ A _{n+1} \leq A _{n} -1 $. This first requires that our choice of $ s _{n} $ does not cause the number of pivotal times to increase, with happens with probability at most $ \frac{5}{d} $. Now let $ k = \max \{P _{n-1}\}  $ be the last pivotal time. For this time to no longer be pivotal, it requires that the vertex corresponding to $ s _{k} $ is now adjacent to the initial clique of $ w _{k}...s _{n}w _{n} $. As $ |s _{n}| = 1 $ and $ w _{k}, w _{n} $ are nontrivial, then this can occur with probability at most $ \frac{4}{d-5} $. The 4 comes from requiring adjacency to the initial clique, and the $ d-5 $ comes from requiring that $ s _{k} $ was already pivotal to begin with. Therefore we lose 1 pivotal time with probability at most $ \frac{5}{d}\cdot  \frac{4}{d-5}  $.
+
+	  By the same argument, we have probability at most $ \frac{5}{d} \left(\frac{4}{d-5} \right) ^{j}$ of losing $ j $ pivotal times, for $ j > 0 $.
+
+	  Therefore $ A _{n+1} $ stochastically dominates $ A _{n} + U _{n} $ where $ \mathbb{P} (U=1) = \frac{d-5}{d} $ and $ \mathbb{P}(U \leq -j) = \frac{5}{d} \left( \frac{4}{d-5} \right) ^{j} $ for $ j \geq 0 $. This has expectation $ \frac{(d-5)(d-14)}{d(d-9)} $, which is positive when $ d > 14 $. As the random variable $ U $ has exponential tail, we know by the large deviations bound that there exists some $ \kappa > 0 $ such that $ \mathbb{P} (|Z _{n}| \leq \kappa n) \leq e ^{-\kappa n} $.
+
+	  As the random variables $ U = U(d) $ are increasing with $ d $, then we can choose $ \kappa(14) $ as a universal bound.
+
+\end{document}
+
